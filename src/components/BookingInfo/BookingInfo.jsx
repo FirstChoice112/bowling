@@ -1,6 +1,8 @@
 import "./BookingInfo.scss";
 
 import Input from "../Input/Input";
+
+//*ga
 //* sdfasgf
 function BookingInfo({ updateBookingDetails }) {
   return (
