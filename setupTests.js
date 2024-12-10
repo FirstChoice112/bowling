@@ -4,13 +4,11 @@ import "@testing-library/jest-dom/vitest";
 import { server } from "./src/mocks/server";
 
 beforeAll(() => server.listen());
-
+console.warn = vi.fn();
 afterEach(() => {
   cleanup();
   server.resetHandlers();
 });
 afterAll(() => {
-  console.log("Stopping server...");
-
   server.close();
 });
