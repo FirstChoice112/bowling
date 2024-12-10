@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Booking.scss";
 
@@ -21,7 +21,7 @@ function Booking() {
 
   function updateBookingDetails(event) {
     const { name, value } = event.target;
-    setError("");
+    setError(""); // Clear any existing error
 
     setBooking((prevState) => ({
       ...prevState,
@@ -31,7 +31,7 @@ function Booking() {
 
   function updateSize(event) {
     const { value, name } = event.target;
-    setError("");
+    setError(""); // Clear any existing error
 
     if (value.length === 2 || value.length === 0) {
       setShoes((prevState) =>
@@ -43,32 +43,23 @@ function Booking() {
   }
 
   function addShoe(name) {
-    setError("");
-
+    setError(""); // Clear any existing error
     setShoes([...shoes, { id: name, size: "" }]);
   }
 
   function removeShoe(name) {
-    setError("");
-
+    setError(""); // Clear any existing error
     setShoes(shoes.filter((shoe) => shoe.id !== name));
   }
 
   function isShoeSizesFilled() {
-    let filled = true;
-
-    shoes.map((shoe) => (shoe.size.length > 0 ? filled : (filled = false)));
-
-    return filled;
+    return shoes.every((shoe) => shoe.size.length > 0);
   }
 
   function checkPlayersAndLanes() {
     const MAX_PLAYERS_PER_LANE = 4;
     const maxPlayersAllows = booking.lanes * MAX_PLAYERS_PER_LANE;
-
-    if (booking.people <= maxPlayersAllows) return true;
-
-    return false;
+    return booking.people <= maxPlayersAllows;
   }
 
   async function sendBooking(bookingInfo) {
@@ -83,7 +74,6 @@ function Booking() {
       }
     );
     const data = await response.json();
-
     return data;
   }
 
@@ -94,7 +84,6 @@ function Booking() {
   function saveConfirmation(confirmation) {
     return new Promise((resolve) => {
       sessionStorage.setItem("confirmation", JSON.stringify(confirmation));
-
       resolve();
     });
   }
@@ -102,6 +91,7 @@ function Booking() {
   async function book() {
     let errorMessage = "";
 
+    // Validate inputs
     if (!booking.when || !booking.lanes || !booking.time || !booking.people) {
       errorMessage = "Alla fälten måste vara ifyllda";
     } else if (!comparePeopleAndShoes()) {
@@ -112,10 +102,10 @@ function Booking() {
       errorMessage = "Det får max vara 4 spelare per bana";
     }
 
-    // Om det finns något fel, sätt error och avsluta funktionen
+    // Handle validation errors
     if (errorMessage) {
       setError(errorMessage);
-      return; // Stoppa här om ett fel inträffar
+      return;
     }
 
     const bookingInfo = {
@@ -124,10 +114,6 @@ function Booking() {
       people: booking.people,
       shoes: shoes.map((shoe) => shoe.size),
     };
-
-    console.log(!error);
-
-    console.log(bookingInfo);
 
     const confirmation = await sendBooking(bookingInfo);
     await saveConfirmation(confirmation);
@@ -148,10 +134,75 @@ function Booking() {
         removeShoe={removeShoe}
         shoes={shoes}
       />
+      <form>
+        {/* Number of bowlers */}
+        <section className="input">
+          <label htmlFor="people" className="input__label">
+            Number of awesome bowlers
+          </label>
+          <input
+            className="input__field booking-info__who"
+            maxLength="2"
+            name="people"
+            type="number"
+            value={booking.people}
+            onChange={updateBookingDetails}
+            id="people"
+          />
+        </section>
+
+        {/* Number of lanes */}
+        <section className="input">
+          <label htmlFor="lanes" className="input__label">
+            Number of lanes
+          </label>
+          <input
+            className="input__field booking-info__lanes"
+            maxLength="2"
+            name="lanes"
+            type="number"
+            value={booking.lanes}
+            onChange={updateBookingDetails}
+            id="lanes"
+          />
+        </section>
+
+        {/* Time field */}
+        <section className="input">
+          <label htmlFor="time" className="input__label">
+            Time
+          </label>
+          <input
+            className="input__field booking-info__time"
+            name="time"
+            type="time"
+            value={booking.time}
+            onChange={updateBookingDetails}
+            id="time"
+          />
+        </section>
+
+        {/* Date field */}
+        <section className="input">
+          <label htmlFor="date" className="input__label">
+            Date
+          </label>
+          <input
+            className="input__field booking-info__date"
+            name="when"
+            type="date"
+            value={booking.when}
+            onChange={updateBookingDetails}
+            id="date"
+          />
+        </section>
+      </form>
+
       <button className="button booking__button" onClick={book}>
         strIIIIIike!
       </button>
-      {error ? <ErrorMessage message={error} /> : ""}
+
+      {error && <ErrorMessage message={error} />}
     </section>
   );
 }

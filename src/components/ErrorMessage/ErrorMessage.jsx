@@ -1,3 +1,4 @@
+import React from "react";
 import "./ErrorMessage.scss";
 
 function ErrorMessage({ message }) {

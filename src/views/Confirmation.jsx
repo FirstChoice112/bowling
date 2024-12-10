@@ -1,3 +1,4 @@
+import React from "react";
 import "./Confirmation.scss";
 import { useLocation } from "react-router-dom";
 

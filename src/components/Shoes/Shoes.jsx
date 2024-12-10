@@ -1,3 +1,4 @@
+import React from "react";
 import "./Shoes.scss";
 import { nanoid } from "nanoid";
 
