@@ -3,9 +3,11 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import Shoes from "./Shoes";
 import { nanoid } from "nanoid";
 
+// Mock funktioner
 const mockUpdateSize = vi.fn();
 const mockAddShoe = vi.fn();
 const mockRemoveShoe = vi.fn();
+const mockCalculatePrice = vi.fn();
 
 describe("Shoes Component", () => {
   let initialShoes;
@@ -24,6 +26,7 @@ describe("Shoes Component", () => {
         addShoe={mockAddShoe}
         removeShoe={mockRemoveShoe}
         shoes={initialShoes}
+        calculatePrice={mockCalculatePrice}
       />
     );
 
@@ -40,6 +43,7 @@ describe("Shoes Component", () => {
         addShoe={mockAddShoe}
         removeShoe={mockRemoveShoe}
         shoes={initialShoes}
+        calculatePrice={mockCalculatePrice}
       />
     );
 
@@ -56,6 +60,7 @@ describe("Shoes Component", () => {
         addShoe={mockAddShoe}
         removeShoe={mockRemoveShoe}
         shoes={initialShoes}
+        calculatePrice={mockCalculatePrice}
       />
     );
 
@@ -71,6 +76,7 @@ describe("Shoes Component", () => {
         addShoe={mockAddShoe}
         removeShoe={mockRemoveShoe}
         shoes={initialShoes}
+        calculatePrice={mockCalculatePrice}
       />
     );
 
@@ -85,12 +91,53 @@ describe("Shoes Component", () => {
         addShoe={mockAddShoe}
         removeShoe={mockRemoveShoe}
         shoes={initialShoes}
+        calculatePrice={mockCalculatePrice}
       />
     );
 
     const addButton = screen.getByText("+");
     fireEvent.click(addButton);
 
+    expect(mockAddShoe).toHaveBeenCalledWith(expect.any(String)); // Ensure it calls with a unique ID
+  });
+
+  it("excludes removed players from the total shoe count and price", () => {
+    render(
+      <Shoes
+        updateSize={mockUpdateSize}
+        addShoe={mockAddShoe}
+        removeShoe={mockRemoveShoe}
+        shoes={initialShoes}
+        calculatePrice={mockCalculatePrice}
+      />
+    );
+
+    const removeButton = screen.getAllByText("-")[0];
+    fireEvent.click(removeButton);
+
+    expect(mockRemoveShoe).toHaveBeenCalledWith(initialShoes[0].id);
+
+    // Kontrollera att summan uppdateras korrekt
+    expect(mockCalculatePrice).not.toHaveBeenCalledWith(
+      expect.objectContaining({ size: initialShoes[0].size })
+    );
+  });
+
+  it("removes the shoe size for a player from the booking system", () => {
+    render(
+      <Shoes
+        updateSize={mockUpdateSize}
+        addShoe={mockAddShoe}
+        removeShoe={mockRemoveShoe}
+        shoes={initialShoes}
+        calculatePrice={mockCalculatePrice}
+      />
+    );
+
+    const removeButton = screen.getAllByText("-")[0];
+    fireEvent.click(removeButton);
+
+    expect(mockRemoveShoe).toHaveBeenCalledWith(initialShoes[0].id);
     expect(mockAddShoe).toHaveBeenCalled();
   });
 });
