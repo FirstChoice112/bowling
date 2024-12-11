@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 
 import Top from "../components/Top/Top";
 import Navigation from "../components/Navigation/Navigation";
-import Input from "../components/Input/Input";
 
 function Confirmation() {
   const { state } = useLocation();
@@ -18,43 +17,63 @@ function Confirmation() {
       <Navigation />
       <Top title="See you soon!" />
       {state || confirmation ? (
-        <form className="confirmation__details">
-          <Input
-            label="When"
-            type="text"
-            customClass="confirmation__input"
-            defaultValue={confirmation.when.replace("T", " ")}
-            disabled="disabled"
-          />
-          <Input
-            label="Who"
-            type="text"
-            customClass="confirmation__input"
-            defaultValue={confirmation.people}
-            disabled="disabled"
-          />
-          <Input
-            label="Lanes"
-            type="text"
-            customClass="confirmation__input"
-            defaultValue={confirmation.lanes}
-            disabled="disabled"
-          />
-          <Input
-            label="Booking number"
-            type="text"
-            customClass="confirmation__input"
-            defaultValue={confirmation.id}
-            disabled="disabled"
-          />
-          <article className="confirmation__price">
+        <div className="confirmation__details">
+          <div className="confirmation__input-group">
+            <label htmlFor="when" className="confirmation__label">
+              When
+            </label>
+            <input
+              id="when"
+              type="text"
+              className="confirmation__input"
+              value={confirmation.when.replace("T", " ")}
+              disabled
+            />
+          </div>
+          <div className="confirmation__input-group">
+            <label htmlFor="who" className="confirmation__label">
+              Who
+            </label>
+            <input
+              id="who"
+              type="text"
+              className="confirmation__input"
+              value={confirmation.people}
+              disabled
+            />
+          </div>
+          <div className="confirmation__input-group">
+            <label htmlFor="lanes" className="confirmation__label">
+              Lanes
+            </label>
+            <input
+              id="lanes"
+              type="text"
+              className="confirmation__input"
+              value={confirmation.lanes}
+              disabled
+            />
+          </div>
+          <div className="confirmation__input-group">
+            <label htmlFor="bookingNumber" className="confirmation__label">
+              Booking number
+            </label>
+            <input
+              id="bookingNumber"
+              type="text"
+              className="confirmation__input"
+              value={confirmation.id}
+              disabled
+            />
+          </div>
+          <div className="confirmation__price">
             <p>Total:</p>
             <p>{confirmation.price} sek</p>
-          </article>
+          </div>
           <button className="button confirmation__button">
             Sweet, let's go!
           </button>
-        </form>
+        </div>
       ) : (
         <h2 className="confirmation__no-booking">Inga bokning gjord!</h2>
       )}
