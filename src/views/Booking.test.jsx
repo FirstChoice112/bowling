@@ -25,69 +25,36 @@ describe("Booking process", () => {
   });
 });
 
-describe("Booking date and time selection", () => {
-  it("allows user to select a date", () => {
+describe("Booking form interactions", () => {
+  it("allows user to select a date and time", () => {
     render(
       <MemoryRouter>
         <Booking />
       </MemoryRouter>
     );
+
     const dateInput = screen.getByLabelText(/date/i);
     fireEvent.change(dateInput, { target: { value: "2023-12-05" } });
     expect(dateInput.value).toBe("2023-12-05");
-  });
 
-  it("allows user to select a time", () => {
-    render(
-      <MemoryRouter>
-        <Booking />
-      </MemoryRouter>
-    );
     const timeInput = screen.getByLabelText(/time/i);
     fireEvent.change(timeInput, { target: { value: "15:00" } });
     expect(timeInput.value).toBe("15:00");
   });
-});
 
-describe("Booking date selection", () => {
-  it("allows user to select a date", () => {
+  it("allows user to specify the number of players and lanes", () => {
     render(
       <MemoryRouter>
         <Booking />
       </MemoryRouter>
     );
-    const dateInput = screen.getByLabelText(/date/i);
-    fireEvent.change(dateInput, { target: { value: "2023-12-05" } });
-    expect(dateInput.value).to.equal("2023-12-05");
-  });
 
-  describe("Booking time selection", () => {
-    it("allows user to select a time", () => {
-      render(
-        <MemoryRouter>
-          <Booking />
-        </MemoryRouter>
-      );
-      const timeInput = screen.getByLabelText(/time/i);
-      fireEvent.change(timeInput, { target: { value: "15:00" } });
-      expect(timeInput.value).to.equal("15:00");
-    });
-  });
+    const playersInput = screen.getByLabelText(/number of awesome bowlers/i);
+    fireEvent.change(playersInput, { target: { value: "4" } });
+    expect(playersInput.value).toBe("4");
 
-  describe("Number of players and lanes selection", () => {
-    it("allows user to specify the number of players and lanes", () => {
-      render(
-        <MemoryRouter>
-          <Booking />
-        </MemoryRouter>
-      );
-      const playersInput = screen.getByLabelText(/number of awesome bowlers/i);
-      fireEvent.change(playersInput, { target: { value: "4" } });
-      expect(playersInput.value).toBe("4");
-
-      const lanesInput = screen.getByLabelText(/number of lanes/i);
-      fireEvent.change(lanesInput, { target: { value: "2" } });
-      expect(lanesInput.value).toBe("2");
-    });
+    const lanesInput = screen.getByLabelText(/number of lanes/i);
+    fireEvent.change(lanesInput, { target: { value: "2" } });
+    expect(lanesInput.value).toBe("2");
   });
 });
