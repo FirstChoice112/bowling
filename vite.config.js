@@ -7,5 +7,10 @@ export default defineConfig({
     setupFiles: "./setupTests.js",
     silent: true,
     reporters: ["default", "verbose"],
+    coverage: {
+      provider: "c8",
+      reporter: ["text", "lcov"],
+      all: true,
+    },
   },
 });
