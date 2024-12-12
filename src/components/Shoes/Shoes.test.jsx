@@ -53,7 +53,7 @@ describe("Shoes Component", () => {
     expect(mockUpdateSize).toHaveBeenCalledWith(initialShoes[0].id, "44");
   });
 
-  it("allows removing a player and updates the component correctly", () => {
+  it("calls removeShoe and updates the component correctly when a player is removed", () => {
     const { rerender } = render(
       <Shoes
         updateSize={mockUpdateSize}
@@ -64,12 +64,15 @@ describe("Shoes Component", () => {
       />
     );
 
+    // Simulera borttagning av en sko
     const removeButton = screen.getAllByText("-")[0];
     fireEvent.click(removeButton);
 
+    // Kontrollera att removeShoe anropas med rätt ID
     expect(mockRemoveShoe).toHaveBeenCalledWith(initialShoes[0].id);
 
-    initialShoes = initialShoes.slice(1); // Simulate removal
+    // Uppdatera rendering efter att en sko tagits bort
+    initialShoes = initialShoes.slice(1); // Simulera borttagning från arrayen
     rerender(
       <Shoes
         updateSize={mockUpdateSize}
@@ -80,6 +83,7 @@ describe("Shoes Component", () => {
       />
     );
 
+    // Kontrollera att antalet inputs har minskat
     const inputs = screen.queryAllByRole("spinbutton");
     expect(inputs).toHaveLength(initialShoes.length);
   });
