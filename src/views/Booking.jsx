@@ -78,7 +78,7 @@ function Booking() {
   }
 
   function comparePeopleAndShoes() {
-    return parseInt(booking.people) === shoes.length;
+    return shoes.length <= parseInt(booking.people) || shoes.length === 0;
   }
 
   function saveConfirmation(confirmation) {
@@ -95,9 +95,8 @@ function Booking() {
     if (!booking.when || !booking.lanes || !booking.time || !booking.people) {
       errorMessage = "Alla fälten måste vara ifyllda";
     } else if (!comparePeopleAndShoes()) {
-      errorMessage = "Antalet skor måste stämma överens med antal spelare";
-    } else if (!isShoeSizesFilled()) {
-      errorMessage = "Alla skor måste vara ifyllda";
+      errorMessage =
+        "Antalet skor får inte överstiga antal spelare, men det är valfritt.";
     } else if (!checkPlayersAndLanes()) {
       errorMessage = "Det får max vara 4 spelare per bana";
     }

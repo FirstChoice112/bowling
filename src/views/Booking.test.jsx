@@ -6,7 +6,7 @@ import { expect } from "vitest";
 import userEvent from "@testing-library/user-event";
 
 describe("Validering av bokningsformulär", () => {
-  it("Should not let user continue unless atleast one player is entered ", async () => {
+  it("Should not let user continue unless at least one player is entered", async () => {
     render(
       <MemoryRouter>
         <Booking />
@@ -17,10 +17,10 @@ describe("Validering av bokningsformulär", () => {
     userEvent.type(screen.getByLabelText(/time/i), "15:00");
     userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
 
-    // Låt användaren inte ange något antal spelare
+    // Let the user not enter any number of players
     fireEvent.click(screen.getByText(/strIIIIIike!/i));
 
-    // Förvänta dig ett felmeddelande
+    // Expect an error message
     expect(
       screen.getByText(/Alla fälten måste vara ifyllda/i)
     ).toBeInTheDocument();
@@ -78,5 +78,29 @@ describe("Booking form interactions", () => {
     const lanesInput = screen.getByLabelText(/number of lanes/i);
     fireEvent.change(lanesInput, { target: { value: "2" } });
     expect(lanesInput.value).toBe("2");
+  });
+});
+
+describe("Validering av skostorlek", () => {
+  it("should not require shoe sizes for all players", async () => {
+    render(
+      <MemoryRouter>
+        <Booking />
+      </MemoryRouter>
+    );
+
+    // Enter booking information without providing shoe sizes
+    userEvent.type(screen.getByLabelText(/date/i), "2023-12-05");
+    userEvent.type(screen.getByLabelText(/time/i), "15:00");
+    userEvent.type(screen.getByLabelText(/number of awesome bowlers/i), "4");
+    userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
+
+    // Let the user not select any shoe sizes
+    fireEvent.click(screen.getByText(/strIIIIIike!/i));
+
+    // Expect no error messages related to shoe size
+    expect(
+      screen.queryByText(/Antalet skor får inte överstiga antal spelare/i)
+    ).toBeNull();
   });
 });
