@@ -21,9 +21,11 @@ describe("Validering av bokningsformulär", () => {
     fireEvent.click(screen.getByText(/strIIIIIike!/i));
 
     // Expect an error message
-    expect(
-      screen.getByText(/Alla fälten måste vara ifyllda/i)
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Alla fälten måste vara ifyllda/i)
+      ).toBeInTheDocument();
+    });
   });
 });
 
@@ -40,6 +42,7 @@ describe("Bokningsprocess", () => {
     userEvent.type(screen.getByLabelText(/number of awesome bowlers/i), "4");
     userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
 
+    // Wait for the confirmation message to appear
     await waitFor(() => {
       const confirmationMessage = screen.getByText(/strIIIIIike!/i);
       expect(confirmationMessage).toBeInTheDocument();
@@ -48,7 +51,7 @@ describe("Bokningsprocess", () => {
 });
 
 describe("Booking form interactions", () => {
-  it("allows user to select a date and time", () => {
+  it("allows user to select a date and time", async () => {
     render(
       <MemoryRouter>
         <Booking />
@@ -64,7 +67,7 @@ describe("Booking form interactions", () => {
     expect(timeInput.value).toBe("15:00");
   });
 
-  it("allows user to specify the number of players and lanes", () => {
+  it("allows user to specify the number of players and lanes", async () => {
     render(
       <MemoryRouter>
         <Booking />
@@ -102,5 +105,36 @@ describe("Validering av skostorlek", () => {
     expect(
       screen.queryByText(/Antalet skor får inte överstiga antal spelare/i)
     ).toBeNull();
+  });
+});
+
+describe("Bokning av flera banor", () => {
+  it("should allow booking multiple lanes when the number of players exceeds the lane capacity", async () => {
+    render(
+      <MemoryRouter>
+        <Booking />
+      </MemoryRouter>
+    );
+
+    // Simulate user input for date, time, and number of players and lanes
+    userEvent.type(screen.getByLabelText(/date/i), "2023-12-05");
+    userEvent.type(screen.getByLabelText(/time/i), "15:00");
+    userEvent.type(screen.getByLabelText(/number of awesome bowlers/i), "10"); // More players than a single lane can handle
+    userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
+
+    // Simulate booking submission
+    fireEvent.click(screen.getByText(/strIIIIIike!/i));
+
+    // Wait for the confirmation message to appear
+    await waitFor(() => {
+      const confirmationMessage = screen.getByText(/strIIIIIike!/i);
+      expect(confirmationMessage).toBeInTheDocument();
+    });
+
+    // Check if the correct number of lanes is shown in confirmation
+    await waitFor(() => {
+      const lanesBooked = screen.getByText(/Bokade banor: 2 banor/i); // Match the full text
+      expect(lanesBooked).toBeInTheDocument();
+    });
   });
 });

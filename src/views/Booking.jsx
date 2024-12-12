@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Booking.scss";
 
@@ -56,10 +56,10 @@ function Booking() {
     return shoes.every((shoe) => shoe.size.length > 0);
   }
 
-  function checkPlayersAndLanes() {
+  // Function to calculate the number of required lanes
+  function checkRequiredLanes() {
     const MAX_PLAYERS_PER_LANE = 4;
-    const maxPlayersAllows = booking.lanes * MAX_PLAYERS_PER_LANE;
-    return booking.people <= maxPlayersAllows;
+    return Math.ceil(booking.people / MAX_PLAYERS_PER_LANE);
   }
 
   async function sendBooking(bookingInfo) {
@@ -97,8 +97,11 @@ function Booking() {
     } else if (!comparePeopleAndShoes()) {
       errorMessage =
         "Antalet skor får inte överstiga antal spelare, men det är valfritt.";
-    } else if (!checkPlayersAndLanes()) {
-      errorMessage = "Det får max vara 4 spelare per bana";
+    } else {
+      const requiredLanes = checkRequiredLanes();
+      if (booking.lanes < requiredLanes) {
+        errorMessage = `För att rymma ${booking.people} spelare, behöver du boka åtminstone ${requiredLanes} banor.`;
+      }
     }
 
     // Handle validation errors
@@ -121,6 +124,17 @@ function Booking() {
       state: { confirmationDetails: confirmation },
     });
   }
+
+  // Automatically update the number of lanes if more are required
+  useEffect(() => {
+    const requiredLanes = checkRequiredLanes();
+    if (booking.lanes < requiredLanes) {
+      setBooking((prevState) => ({
+        ...prevState,
+        lanes: requiredLanes, // Update the number of lanes automatically
+      }));
+    }
+  }, [booking.people]); // Update when the number of people changes
 
   return (
     <section className="booking">
@@ -202,6 +216,13 @@ function Booking() {
       </button>
 
       {error && <ErrorMessage message={error} />}
+
+      {/* Show confirmation of booked lanes if available */}
+      {booking.lanes > 0 && (
+        <section className="confirmation">
+          <p>Bokade banor: {booking.lanes} banor</p>
+        </section>
+      )}
     </section>
   );
 }
