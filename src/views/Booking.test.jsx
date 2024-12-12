@@ -5,7 +5,29 @@ import Booking from "./Booking";
 import { expect } from "vitest";
 import userEvent from "@testing-library/user-event";
 
-describe("Booking process", () => {
+describe("Validering av bokningsformulär", () => {
+  it("Should not let user continue unless atleast one player is entered ", async () => {
+    render(
+      <MemoryRouter>
+        <Booking />
+      </MemoryRouter>
+    );
+
+    userEvent.type(screen.getByLabelText(/date/i), "2023-12-05");
+    userEvent.type(screen.getByLabelText(/time/i), "15:00");
+    userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
+
+    // Låt användaren inte ange något antal spelare
+    fireEvent.click(screen.getByText(/strIIIIIike!/i));
+
+    // Förvänta dig ett felmeddelande
+    expect(
+      screen.getByText(/Alla fälten måste vara ifyllda/i)
+    ).toBeInTheDocument();
+  });
+});
+
+describe("Bokningsprocess", () => {
   it("allows user to book a lane and receive confirmation", async () => {
     render(
       <MemoryRouter>
@@ -57,23 +79,4 @@ describe("Booking form interactions", () => {
     fireEvent.change(lanesInput, { target: { value: "2" } });
     expect(lanesInput.value).toBe("2");
   });
-});
-it("Should not let user continue unless atleast one player is entered ", async () => {
-  render(
-    <MemoryRouter>
-      <Booking />
-    </MemoryRouter>
-  );
-
-  userEvent.type(screen.getByLabelText(/date/i), "2023-12-05");
-  userEvent.type(screen.getByLabelText(/time/i), "15:00");
-  userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
-
-  // Låt användaren inte ange något antal spelare
-  fireEvent.click(screen.getByText(/strIIIIIike!/i));
-
-  // Förvänta dig ett felmeddelande
-  expect(
-    screen.getByText(/Alla fälten måste vara ifyllda/i)
-  ).toBeInTheDocument();
 });
