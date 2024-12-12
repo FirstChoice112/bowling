@@ -8,9 +8,10 @@ export default defineConfig({
     silent: true,
     reporters: ["default", "verbose"],
     coverage: {
-      provider: "c8",
-      reporter: ["text", "lcov"],
-      all: true,
+      provider: "v8",
+      reporter: ["text", "json", "lcov", "json-summary"],
+      include: ["src/**/*", "src/**/*.jsx"],
+      exclude: ["src/main.jsx"],
     },
   },
 });
