@@ -18,7 +18,7 @@ describe("Validering av bokningsformulär", () => {
     userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
 
     // Let the user not enter any number of players
-    fireEvent.click(screen.getByText(/strIIIIIike!/i));
+    fireEvent.click(screen.getByText(/Slutför bokning/i));
 
     // Expect an error message
     await waitFor(() => {
@@ -44,7 +44,7 @@ describe("Bokningsprocess", () => {
 
     // Wait for the confirmation message to appear
     await waitFor(() => {
-      const confirmationMessage = screen.getByText(/strIIIIIike!/i);
+      const confirmationMessage = screen.getByText(/Slutför bokning/i);
       expect(confirmationMessage).toBeInTheDocument();
     });
   });
@@ -99,7 +99,7 @@ describe("Validering av skostorlek", () => {
     userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
 
     // Let the user not select any shoe sizes
-    fireEvent.click(screen.getByText(/strIIIIIike!/i));
+    fireEvent.click(screen.getByText(/Slutför bokning/i));
 
     // Expect no error messages related to shoe size
     expect(
@@ -123,11 +123,11 @@ describe("Bokning av flera banor", () => {
     userEvent.type(screen.getByLabelText(/number of lanes/i), "2");
 
     // Simulate booking submission
-    fireEvent.click(screen.getByText(/strIIIIIike!/i));
+    fireEvent.click(screen.getByText(/Slutför bokning/i));
 
     // Wait for the confirmation message to appear
     await waitFor(() => {
-      const confirmationMessage = screen.getByText(/strIIIIIike!/i);
+      const confirmationMessage = screen.getByText(/Slutför bokning/i);
       expect(confirmationMessage).toBeInTheDocument();
     });
 
