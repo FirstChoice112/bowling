@@ -61,7 +61,9 @@ describe("Confirmation Component", () => {
       </MemoryRouter>
     );
 
-    const button = screen.getByRole("button", { name: "Sweet, let's go!" });
+    const button = screen.getByRole("button", {
+      name: "slutför bokning",
+    });
     expect(button).toBeInTheDocument();
     expect(button).toBeEnabled();
   });

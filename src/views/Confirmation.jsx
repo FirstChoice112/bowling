@@ -71,7 +71,7 @@ function Confirmation() {
             <p>{confirmation.price} sek</p>
           </div>
           <button className="button confirmation__button">
-            Sweet, let's go!
+            slutför bokning
           </button>
         </div>
       ) : (
