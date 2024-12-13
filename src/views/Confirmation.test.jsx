@@ -44,7 +44,7 @@ describe("Confirmation Component", () => {
   });
 
   test("should calculate total price correctly", () => {
-    const totalPrice = 4 * 120 + 2 * 100; // 4 personer, 2 banor
+    const totalPrice = 4 * 120 + 2 * 100;
     render(
       <MemoryRouter>
         <Confirmation />
@@ -69,7 +69,7 @@ describe("Confirmation Component", () => {
   });
 
   test("should display error message if no booking exists", () => {
-    sessionStorage.clear(); // Simulera ingen bokning
+    sessionStorage.clear();
     render(
       <MemoryRouter>
         <Confirmation />

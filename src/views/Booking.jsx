@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Booking.scss";
-
 import BookingInfo from "../components/BookingInfo/BookingInfo";
 import ErrorMessage from "../components/ErrorMessage/ErrorMessage";
 import Navigation from "../components/Navigation/Navigation";
@@ -21,7 +20,7 @@ function Booking() {
 
   function updateBookingDetails(event) {
     const { name, value } = event.target;
-    setError(""); // Clear any existing error
+    setError("");
 
     setBooking((prevState) => ({
       ...prevState,
@@ -31,7 +30,7 @@ function Booking() {
 
   function updateSize(event) {
     const { value, name } = event.target;
-    setError(""); // Clear any existing error
+    setError("");
 
     if (value.length === 2 || value.length === 0) {
       setShoes((prevState) =>
@@ -43,12 +42,12 @@ function Booking() {
   }
 
   function addShoe(name) {
-    setError(""); // Clear any existing error
+    setError("");
     setShoes([...shoes, { id: name, size: "" }]);
   }
 
   function removeShoe(name) {
-    setError(""); // Clear any existing error
+    setError("");
     setShoes(shoes.filter((shoe) => shoe.id !== name));
   }
 
@@ -56,7 +55,6 @@ function Booking() {
     return shoes.every((shoe) => shoe.size.length > 0);
   }
 
-  // Function to calculate the number of required lanes
   function checkRequiredLanes() {
     const MAX_PLAYERS_PER_LANE = 4;
     return Math.ceil(booking.people / MAX_PLAYERS_PER_LANE);
@@ -91,7 +89,6 @@ function Booking() {
   async function book() {
     let errorMessage = "";
 
-    // Validate inputs
     if (!booking.when || !booking.lanes || !booking.time || !booking.people) {
       errorMessage = "Alla fälten måste vara ifyllda";
     } else if (!comparePeopleAndShoes()) {
@@ -104,7 +101,6 @@ function Booking() {
       }
     }
 
-    // Handle validation errors
     if (errorMessage) {
       setError(errorMessage);
       return;
@@ -125,16 +121,15 @@ function Booking() {
     });
   }
 
-  // Automatically update the number of lanes if more are required
   useEffect(() => {
     const requiredLanes = checkRequiredLanes();
     if (booking.lanes < requiredLanes) {
       setBooking((prevState) => ({
         ...prevState,
-        lanes: requiredLanes, // Update the number of lanes automatically
+        lanes: requiredLanes,
       }));
     }
-  }, [booking.people]); // Update when the number of people changes
+  }, [booking.people]);
 
   return (
     <section className="booking">
@@ -148,7 +143,6 @@ function Booking() {
         shoes={shoes}
       />
       <form>
-        {/* Number of bowlers */}
         <section className="input">
           <label htmlFor="people" className="input__label">
             Number of awesome bowlers
@@ -164,7 +158,6 @@ function Booking() {
           />
         </section>
 
-        {/* Number of lanes */}
         <section className="input">
           <label htmlFor="lanes" className="input__label">
             Number of lanes
@@ -180,7 +173,6 @@ function Booking() {
           />
         </section>
 
-        {/* Time field */}
         <section className="input">
           <label htmlFor="time" className="input__label">
             Time
@@ -195,7 +187,6 @@ function Booking() {
           />
         </section>
 
-        {/* Date field */}
         <section className="input">
           <label htmlFor="date" className="input__label">
             Date
@@ -217,7 +208,6 @@ function Booking() {
 
       {error && <ErrorMessage message={error} />}
 
-      {/* Show confirmation of booked lanes if available */}
       {booking.lanes > 0 && (
         <section className="confirmation">
           <p>Bokade banor: {booking.lanes} banor</p>

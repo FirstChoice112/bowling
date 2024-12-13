@@ -38,7 +38,6 @@ function Navigation() {
         Confirmation
       </a>
 
-      {/* Show booking details if booking exists in sessionStorage */}
       {booking ? (
         <div className="booking-details">
           <p>Booking for: {booking.name}</p>
